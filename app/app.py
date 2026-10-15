@@ -8,8 +8,18 @@ from models import db, User, Poll, Vote
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default-key')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql+psycopg2://voting_user:group12cohort8@localhost:5432/voting_db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+    'DATABASE_URL',
+    'postgresql+psycopg2://voting_user:group12cohort8@db:5432/vote_db'
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# Initialize Redis connection
+r = redis.Redis(
+    host=os.getenv('REDIS_HOST', 'redis'),
+    port=6379,
+    db=0,
+    decode_responses=True
+)
 
 db.init_app(app)
 
@@ -130,4 +140,3 @@ with app.app_context():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-    
